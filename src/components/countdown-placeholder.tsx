@@ -33,10 +33,10 @@ export default function CountdownPlaceholder({
   const formattedDate = formatReleaseDate(releaseDate, serverTimezone);
 
   return (
-    <div className="min-h-screen relative flex flex-col items-center justify-center p-4 space-y-12 overflow-hidden h-screen">
+    <div className="min-h-screen relative flex flex-col items-center justify-center p-4 sm:p-6 md:p-8 overflow-hidden">
       {/* Background animation - Static on server */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {/* Static grid pattern */}
+        {/* Static grid pattern - responsive sizing */}
         <div
           className="absolute inset-0"
           style={{
@@ -44,12 +44,12 @@ export default function CountdownPlaceholder({
               linear-gradient(to right, var(--color-foreground-light) 1px, transparent 1px),
               linear-gradient(to bottom, var(--color-foreground-light) 1px, transparent 1px)
             `,
-            backgroundSize: "50px 50px",
+            backgroundSize: "clamp(30px, 8vw, 50px) clamp(30px, 8vw, 50px)",
             maskImage:
-              "radial-gradient(ellipse at center, black 30%, transparent 70%)",
+              "radial-gradient(ellipse at center, black 20%, transparent 80%)",
             WebkitMaskImage:
-              "radial-gradient(ellipse at center, black 30%, transparent 70%)",
-            opacity: 0.03,
+              "radial-gradient(ellipse at center, black 20%, transparent 80%)",
+            opacity: 0.02,
           }}
         />
 
@@ -57,59 +57,73 @@ export default function CountdownPlaceholder({
         {DOT_POSITIONS.map((pos, i) => (
           <div
             key={i}
-            className="absolute w-1 h-1 bg-foreground-light rounded-full"
+            className="absolute w-[2px] h-[2px] sm:w-1 sm:h-1 bg-foreground-light rounded-full"
             style={{
               left: `${pos.x}vw`,
               top: `${pos.y}vh`,
-              opacity: 0.1,
+              opacity: 0.08,
             }}
           />
         ))}
       </div>
 
       {/* Content - All SSR */}
-      <div className="relative z-10 w-full max-w-2xl mx-auto space-y-12 h-full flex flex-col justify-evenly">
+      <div className="relative z-10 w-full max-w-2xl mx-auto space-y-8 sm:space-y-10 md:space-y-12 py-6 sm:py-8 md:py-12 px-2">
         {/* Header */}
-        <div className="text-center space-y-6">
+        <div className="text-center space-y-4 sm:space-y-6">
           <div>
-            <h1 className="logo-font text-6xl md:text-7xl font-normal text-foreground mb-3">
+            <h1 className="logo-font text-4xl xs:text-5xl sm:text-6xl md:text-7xl font-normal text-foreground mb-2 sm:mb-3 leading-tight">
               Kyro
             </h1>
-            <div className="h-px w-32 bg-primary/40 mx-auto"></div>
+            <div className="h-px w-24 xs:w-28 sm:w-32 bg-primary/40 mx-auto"></div>
           </div>
 
-          <div className="space-y-3">
-            <h2 className="text-2xl md:text-3xl font-medium text-foreground-sec">
+          <div className="space-y-2 sm:space-y-3">
+            <h2 className="text-lg xs:text-xl sm:text-2xl md:text-3xl font-medium text-foreground-sec leading-snug">
               Kyro Hub
             </h2>
-            <p className="text-foreground-light max-w-md mx-auto">
+            <p className="text-foreground-light text-sm xs:text-base sm:text-base md:text-lg max-w-md mx-auto px-2 sm:px-0 leading-relaxed">
               A streamlined tool for managing your business in one place
             </p>
           </div>
         </div>
 
         {/* Countdown Section */}
-        <div className="space-y-8">
-          <div className="text-center mb-6">
-            <h3 className="text-lg font-medium text-foreground-light mb-2">
+        <div className="space-y-6 sm:space-y-8">
+          <div className="text-center">
+            <h3 className="text-base sm:text-lg md:text-lg font-medium text-foreground-light">
               Launching in
             </h3>
           </div>
 
           {/* Client-only Clock */}
-          <CountdownClock releaseDate={releaseDate} timezone={serverTimezone} />
+          <div className="px-1">
+            <CountdownClock
+              releaseDate={releaseDate}
+              timezone={serverTimezone}
+            />
+          </div>
 
-          <div className="text-center">
-            <p className="text-sm text-foreground-light">{formattedDate}</p>
+          <div className="text-center px-2">
+            <p className="text-xs xs:text-sm sm:text-sm text-foreground-light break-words leading-relaxed">
+              {formattedDate}
+            </p>
+            <p className="text-xs text-foreground-light/60 mt-1">
+              Your local time
+            </p>
           </div>
         </div>
 
         {/* Email subscription - Client Component */}
-        <EmailSubscription />
+        <div className="px-3 sm:px-4 md:px-0">
+          <EmailSubscription />
+        </div>
 
         {/* Footer */}
-        <div className="text-center pt-8 border-t border-background-sec">
-          <p className="text-xs text-foreground-light/60">© 2024 Kyro</p>
+        <div className="text-center pt-6 sm:pt-8 border-t border-background-sec/50">
+          <p className="text-xs text-foreground-light/60">
+            © {new Date().getFullYear()} Kyro
+          </p>
         </div>
       </div>
     </div>
